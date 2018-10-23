@@ -1,13 +1,15 @@
 package com.diegoalvis.android.newsapp.api
 
-import io.reactivex.Observable
+import io.reactivex.Flowable
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
+import java.security.acl.Owner
 
 interface ApiInterface {
 
-    @GET("{section}.json")
-    fun getNewsList(@Path("section") section: String, @Query("api-key") apiKey: String): Observable<NewsResponse>
+    @GET("/search/repositories")
+    fun searchRepos(@Query("q") keyWords: String, @Query("page") page: Int? = null): Flowable<SearchResponse>
 
+    @GET("/repos/:owner/:repo/subscribers")
+    fun getWatchers(@Query("page") page: Int? = null): Flowable<List<Owner>>
 }
