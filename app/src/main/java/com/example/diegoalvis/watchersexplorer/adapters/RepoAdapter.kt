@@ -9,7 +9,7 @@ import com.example.diegoalvis.watchersexplorer.databinding.ItemRepoBinding
 import com.example.diegoalvis.watchersexplorer.models.Repo
 import com.example.diegoalvis.watchersexplorer.utils.inflate
 
-class RepoAdapter(val callback: (pos: Int) -> Unit): RecyclerView.Adapter<RepoViewHolder>() {
+class RepoAdapter(private val callback:(pos: Int) -> Unit): RecyclerView.Adapter<RepoViewHolder>() {
 
     var data = listOf<Repo>()
         set(value) {
