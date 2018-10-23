@@ -9,9 +9,9 @@ import com.example.diegoalvis.watchersexplorer.databinding.ItemRepoBinding
 import com.example.diegoalvis.watchersexplorer.models.Repo
 import com.example.diegoalvis.watchersexplorer.utils.inflate
 
-class RepoAdapter(val callback:(pos:Int)->Unit): RecyclerView.Adapter<RepoViewHolder>() {
+class RepoAdapter(val callback: (pos: Int) -> Unit): RecyclerView.Adapter<RepoViewHolder>() {
 
-    var data =  listOf<Repo>()
+    var data = listOf<Repo>()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -23,15 +23,14 @@ class RepoAdapter(val callback:(pos:Int)->Unit): RecyclerView.Adapter<RepoViewHo
         holder.binding?.handler = this
     }
 
-    fun onMovieClick(pos:Int){
-        callback(pos)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder
-            = RepoViewHolder(parent.inflate(R.layout.item_repo))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        RepoViewHolder(parent.inflate(R.layout.item_repo))
 
     override fun getItemCount(): Int = data.size
 
+    fun onRepoClick(pos: Int) {
+        callback(pos)
+    }
 }
 
 class RepoViewHolder(view: View): RecyclerView.ViewHolder(view) {

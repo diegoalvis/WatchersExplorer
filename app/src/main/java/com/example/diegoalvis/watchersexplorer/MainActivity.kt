@@ -15,6 +15,8 @@ import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var  viewModel: SharedViewModel
+
     private val adapter = RepoAdapter {
         supportFragmentManager
             .beginTransaction()
@@ -22,11 +24,14 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    private lateinit var  viewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        switchView.setOnCheckedChangeListener { _, isChecked ->
+            switchView.text = getString(if (isChecked) R.string.sort_asc else R.string.sort_desc)
+        }
 
         list.adapter = adapter
         list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
