@@ -10,14 +10,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diegoalvis.watchersexplorer.R
 import com.example.diegoalvis.watchersexplorer.adapters.WatcherAdapter
 import com.example.diegoalvis.watchersexplorer.databinding.DetailFragmentBinding
 import com.example.diegoalvis.watchersexplorer.viewmodels.SharedViewModel
 import kotlinx.android.synthetic.main.detail_fragment.view.*
-import kotlinx.android.synthetic.main.list_repo_fragment.view.*
+import org.jetbrains.anko.browse
 
 
 class DetailFragment : Fragment() {
@@ -37,11 +36,19 @@ class DetailFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.detail_fragment, container, false)
         val view = binding.root
 
-        view.watcherList.adapter = adapter
-        view.watcherList.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2)
-
         var mPreviousTotal = 0
         var mLoading = true
+
+        viewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
+        viewModel.watchers.observe(this, Observer {
+            mLoading = false
+            mPreviousTotal = 0
+            adapter.data = it.distinct().toMutableList()
+        })
+
+        binding.itemRepo.repo = viewModel.selected.value
+        view.watcherList.adapter = adapter
+        view.watcherList.layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity, 2)
         view.watcherList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -56,7 +63,7 @@ class DetailFragment : Fragment() {
                     }
                 }
 
-                val visibleThreshold = 8
+                val visibleThreshold = 22
                 if (totalItemCount != null) {
                     val itemPosition = (recyclerView.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
                     if (!mLoading && (itemPosition + visibleThreshold) >= totalItemCount) {
@@ -78,16 +85,6 @@ class DetailFragment : Fragment() {
             }
         })
 
-        viewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
-        viewModel.watchers.observe(this, Observer {
-            mLoading = false
-            mPreviousTotal = 0
-            adapter.data = it.distinct().toMutableList()
-        })
-
-        binding.itemRepo.repo = viewModel.selected.value
-
-
         // fetch data
         viewModel.getWatchers()?.subscribe({ adapter.data = it }, { it.printStackTrace() })
 
@@ -95,6 +92,6 @@ class DetailFragment : Fragment() {
     }
 
     private fun watcherSelected(watcherPage: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        activity?.browse(watcherPage)
     }
 }
