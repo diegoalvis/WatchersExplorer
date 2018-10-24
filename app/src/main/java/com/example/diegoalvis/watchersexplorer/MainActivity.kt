@@ -2,8 +2,6 @@ package com.example.diegoalvis.watchersexplorer
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -13,15 +11,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.diegoalvis.watchersexplorer.adapters.RepoAdapter
 import com.example.diegoalvis.watchersexplorer.databinding.ActivityMainBinding
 import com.example.diegoalvis.watchersexplorer.fragments.DetailFragment
 import com.example.diegoalvis.watchersexplorer.fragments.ListRepoFragment
-import com.example.diegoalvis.watchersexplorer.models.Repo
 import com.example.diegoalvis.watchersexplorer.utils.replace
 import com.example.diegoalvis.watchersexplorer.viewmodels.SharedViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.list_repo_fragment.*
+import org.jetbrains.anko.startActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,6 +43,10 @@ class MainActivity : AppCompatActivity() {
             switchView.text = getString(if (isChecked) R.string.sort_asc else R.string.sort_desc)
         }
 
+        info.setOnClickListener { startActivity<InfoActivity>() }
+        ic_github.setOnClickListener { startActivity<InfoActivity>() }
+        closeDetails.setOnClickListener { showSearchList() }
+
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?) = false
             @SuppressLint("CheckResult")
@@ -61,7 +61,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        closeDetails.setOnClickListener { showSearchList() }
         showSearchList()
     }
 

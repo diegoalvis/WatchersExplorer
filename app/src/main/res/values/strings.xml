@@ -9,4 +9,7 @@
   
   <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="info_legend">Watchers Explorer is an application developed by Diego Alvis as a part of the selection
+    process for the company Cuebi.\n\nContact diegoalvispal@gmail.com
+  </string>
 </resources>
