@@ -11,7 +11,7 @@ import com.example.diegoalvis.watchersexplorer.utils.inflate
 
 class RepoAdapter(private val callback:(pos: Int) -> Unit): RecyclerView.Adapter<RepoViewHolder>() {
 
-    var data = listOf<Repo>()
+    var data = mutableListOf<Repo>()
         set(value) {
             field = value
             notifyDataSetChanged()

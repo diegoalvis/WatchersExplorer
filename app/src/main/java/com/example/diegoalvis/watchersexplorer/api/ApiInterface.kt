@@ -12,5 +12,5 @@ interface ApiInterface {
     fun searchRepos(@Query("q") keyWords: String, @Query("page") page: Int? = null): Flowable<SearchResponse>
 
     @GET("/repos/{owner}/{repo}/subscribers")
-    fun getWatchers(@Path("owner") owner: String, @Path("repo") repo: String, @Query("page") page: Int? = null): Flowable<ArrayList<Owner>>
+    fun getWatchers(@Path("owner") owner: String, @Path("repo") repo: String, @Query("page") page: Int? = null): Flowable<MutableList<Owner>>
 }

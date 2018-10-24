@@ -4,6 +4,7 @@
   <data>
     <import type="android.view.View"/>
     <variable name="showCloseView" type="androidx.databinding.ObservableBoolean"/>
+    <variable name="isLoading" type="androidx.databinding.ObservableBoolean"/>
   </data>
   
   <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -36,7 +37,7 @@
               android:layout_gravity="center_vertical"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:alpha="0.5"
+              android:alpha="0.7"
               android:src="@drawable/ic_github_small"
               android:visibility="@{showCloseView ? View.INVISIBLE : View.VISIBLE}"
               app:layout_constraintBottom_toBottomOf="@id/searchView"
@@ -93,29 +94,31 @@
               android:id="@+id/switchView"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
+              android:layout_marginStart="8dp"
               android:textIsSelectable="true"
+              android:text="@string/sort_desc"
+              app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toBottomOf="@id/checkboxSortByStars"/>
         
         </androidx.constraintlayout.widget.ConstraintLayout>
       </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
+  
+    <ProgressBar
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="?android:colorAccent"
+        android:elevation="2dp"
+        android:visibility="@{isLoading ? View.VISIBLE : View.GONE}" />
     
-    
-    <androidx.core.widget.NestedScrollView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-      
       <FrameLayout
           android:id="@+id/container"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-        
-          <include layout="@layout/content_main"/>
-      
-      </FrameLayout>
+          android:layout_height="wrap_content"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
     
-    </androidx.core.widget.NestedScrollView>
-  
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+>
+  
+  <data>
+    <variable name="watcher" type="com.example.diegoalvis.watchersexplorer.models.Owner"/>
+    <variable name="handler" type="com.example.diegoalvis.watchersexplorer.adapters.WatcherAdapter"/>
+  </data>
+  
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:onClick="@{(view)->handler.onWatcherClick(watcher.htmlUrl)}"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+    
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:imgUrl="@{watcher.avatarUrl}"/>
+    
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="@{watcher.login}"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Menu"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintTop_toTopOf="@id/avatar"
+        app:layout_constraintBottom_toBottomOf="@id/avatar"
+        tools:text="Username"/>
+  
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

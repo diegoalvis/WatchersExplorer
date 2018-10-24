@@ -9,6 +9,7 @@
       android:layout_width="match_parent" android:layout_height="match_parent"
       android:background="@android:color/white"
       android:clickable="true" android:focusable="true"
+      android:layout_marginTop="8dp"
       tools:context=".fragments.DetailFragment">
     
     <include android:id="@+id/itemRepo" layout="@layout/item_repo"/>
@@ -25,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"/>
     
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list"
+        android:id="@+id/watcherList"
         android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 def retrofit_version = "2.4.0"
 
@@ -46,5 +47,4 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
 
     implementation "com.github.bumptech.glide:glide:4.8.0"
-
 }
