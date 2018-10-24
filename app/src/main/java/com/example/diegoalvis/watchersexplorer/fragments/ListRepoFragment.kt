@@ -32,7 +32,6 @@ class ListRepoFragment : Fragment() {
         view.list.adapter = adapter
         view.list.layoutManager = LinearLayoutManager(activity!!)
 
-
         var mPreviousTotal = 0
         var mLoading = true
         view.list.addOnScrollListener(object : RecyclerView.OnScrollListener() {

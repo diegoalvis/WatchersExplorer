@@ -3,8 +3,8 @@
   <string name="action_settings">Settings</string>
   
   <string name="sort_by_stars">Sort by stars</string>
-  <string name="sort_asc">Asc</string>
-  <string name="sort_desc">Desc</string>
+  <string name="sort_asc">asc</string>
+  <string name="sort_desc">desc</string>
   <string name="watchers">Watchers</string>
   
   <!-- TODO: Remove or change this placeholder text -->

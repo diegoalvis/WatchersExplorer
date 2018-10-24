@@ -18,6 +18,7 @@ import com.example.diegoalvis.watchersexplorer.databinding.ActivityMainBinding
 import com.example.diegoalvis.watchersexplorer.fragments.DetailFragment
 import com.example.diegoalvis.watchersexplorer.fragments.ListRepoFragment
 import com.example.diegoalvis.watchersexplorer.models.Repo
+import com.example.diegoalvis.watchersexplorer.utils.replace
 import com.example.diegoalvis.watchersexplorer.viewmodels.SharedViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.list_repo_fragment.*
@@ -51,8 +52,10 @@ class MainActivity : AppCompatActivity() {
             @SuppressLint("CheckResult")
             override fun onQueryTextSubmit(query: String): Boolean {
                 showSearchList()
+                val sortByStars = if (checkboxSortByStars.isChecked) "stars" else null
+                val order = if (sortByStars !=  null) switchView.text.toString() else null
                 viewModel
-                    .searchRepositories(query)
+                    .searchRepositories(query, sortByStars, order)
                     .subscribe({ viewModel.repos.value = it.items }, { it.printStackTrace() })
                 return false
             }
@@ -66,30 +69,13 @@ class MainActivity : AppCompatActivity() {
         showCloseView.set(true)
         switchView.visibility = GONE
         checkboxSortByStars.visibility = GONE
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, detailFragment, DetailFragment.TAG)
-            .commitAllowingStateLoss()
+        supportFragmentManager.replace(R.id.container, detailFragment, DetailFragment.TAG)
     }
 
     private fun showSearchList() {
         showCloseView.set(false)
         switchView.visibility = VISIBLE
         checkboxSortByStars.visibility = VISIBLE
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, listRepoFragment, ListRepoFragment.TAG)
-            .commitAllowingStateLoss()
+        supportFragmentManager.replace(R.id.container, listRepoFragment, ListRepoFragment.TAG)
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem) =
-        when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
 }

@@ -1,6 +1,5 @@
 package com.example.diegoalvis.watchersexplorer.viewmodels
 
-import android.annotation.SuppressLint
 import android.app.Application
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.AndroidViewModel
@@ -15,12 +14,14 @@ import java.util.concurrent.TimeUnit
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
-    var isLoading: ObservableBoolean = ObservableBoolean(false)
-    var pageCounter = 1
-
+    private var pageRepoCounter = 1
+    private var pageWatcherCounter = 1
     private val apiInterface = ApiClient.getInterface()
     private var lastKeyWordSearched: String = ""
+    private var lastSort: String? = null
+    private var lastOrder: String? = null
 
+    var isLoading: ObservableBoolean = ObservableBoolean(false)
     val repos = MutableLiveData<MutableList<Repo>>()
     val watchers = MutableLiveData<MutableList<Owner>>()
     val selected = MutableLiveData<Repo>()
@@ -29,34 +30,50 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         selected.value = item
     }
 
-    fun getWatchers() {
-        selected.value?.let {
+
+    // fetch watchers
+    fun getWatchers(page: Int = 1): Flowable<MutableList<Owner>>? {
+        if (page == 1) {
+            pageWatcherCounter = 1
+        }
+        return selected.value?.let {
             isLoading.set(true)
             apiInterface
-                .getWatchers(it.owner.login, it.name)
+                .getWatchers(it.owner.login, it.name, page)
                 .applyUISchedulers()
                 .doOnTerminate { isLoading.set(false) }
-                .subscribe({ watchers.value = it }, { it.printStackTrace() })
         }
     }
 
-    // Fetch repositories
-    fun searchRepositories(keyWord: String, page: Int = 1): Flowable<SearchResponse> {
+    fun getMoreWatchers(): Flowable<MutableList<Owner>>? {
+        pageWatcherCounter += 1
+        return getWatchers(pageWatcherCounter)
+    }
+
+    // fetch repositories
+    fun searchRepositories(
+        keyWord: String,
+        sort: String? = null,
+        order: String? = null,
+        page: Int = 1
+    ): Flowable<SearchResponse> {
         lastKeyWordSearched = keyWord
+        lastSort = sort
+        lastOrder = order
         if (page == 1) {
-            pageCounter  = 1
+            pageRepoCounter = 1
         }
 
         isLoading.set(true)
         return apiInterface
-            .searchRepos(keyWord, page)
+            .searchRepos(keyWord, sort, order, page)
             .throttleFirst(1, TimeUnit.SECONDS)
             .applyUISchedulers()
             .doOnTerminate { isLoading.set(false) }
     }
 
     fun getMoreRepos(): Flowable<SearchResponse> {
-        pageCounter += 1
-        return searchRepositories(lastKeyWordSearched, pageCounter)
+        pageRepoCounter += 1
+        return searchRepositories(lastKeyWordSearched, lastSort, lastOrder, pageRepoCounter)
     }
 }

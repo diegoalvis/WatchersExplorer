@@ -11,7 +11,7 @@ import com.example.diegoalvis.watchersexplorer.utils.inflate
 
 class WatcherAdapter(private val callback:(watcherPage: String) -> Unit): RecyclerView.Adapter<WatcherViewHolder>() {
 
-    var data = listOf<Owner>()
+    var data = mutableListOf<Owner>()
         set(value) {
             field = value
             notifyDataSetChanged()

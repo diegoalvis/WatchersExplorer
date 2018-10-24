@@ -66,20 +66,6 @@
               app:queryHint="Search repositories"
               app:layout_collapseMode="pin"
               app:layout_constraintStart_toEndOf="@id/ic_github"
-              app:layout_constraintEnd_toStartOf="@id/filter_button"
-              app:layout_constraintTop_toTopOf="parent"/>
-          
-          <ImageView
-              android:id="@+id/filter_button"
-              android:layout_marginStart="3dp"
-              android:layout_marginEnd="3dp"
-              android:layout_gravity="center_vertical"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:tint="@android:color/white"
-              android:src="@drawable/ic_action_settings"
-              app:layout_constraintBottom_toBottomOf="@id/searchView"
-              app:layout_constraintStart_toEndOf="@id/searchView"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintTop_toTopOf="parent"/>
           
@@ -88,22 +74,24 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/sort_by_stars"
+              android:textColor="@android:color/white"
+              app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toBottomOf="@id/searchView"/>
           
           <Switch
               android:id="@+id/switchView"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_marginStart="8dp"
+              android:layout_marginStart="16dp"
               android:textIsSelectable="true"
               android:text="@string/sort_desc"
-              app:layout_constraintStart_toStartOf="parent"
-              app:layout_constraintTop_toBottomOf="@id/checkboxSortByStars"/>
+              app:layout_constraintStart_toEndOf="@id/checkboxSortByStars"
+              app:layout_constraintTop_toBottomOf="@id/searchView"/>
         
         </androidx.constraintlayout.widget.ConstraintLayout>
       </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
-  
+    
     <ProgressBar
         android:id="@android:id/empty"
         android:layout_width="wrap_content"
@@ -112,13 +100,13 @@
         android:indeterminate="true"
         android:indeterminateTint="?android:colorAccent"
         android:elevation="2dp"
-        android:visibility="@{isLoading ? View.VISIBLE : View.GONE}" />
+        android:visibility="@{isLoading ? View.VISIBLE : View.GONE}"/>
     
-      <FrameLayout
-          android:id="@+id/container"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-    
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+  
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
