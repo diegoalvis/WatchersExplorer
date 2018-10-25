@@ -6,28 +6,32 @@
   
   </data>
   
-  <LinearLayout
-      android:layout_width="match_parent" android:layout_height="match_parent"
-      android:background="@android:color/white"
-      android:clickable="true" android:focusable="true"
-      android:layout_marginTop="8dp"
-      android:orientation="vertical"
-      tools:context=".fragments.DetailFragment">
-    
-    <include android:id="@+id/itemRepo" layout="@layout/item_repo"/>
-    
-    <TextView
-        android:id="@+id/watchersTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/watchers"
-        android:layout_margin="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
-    
+  <androidx.core.widget.NestedScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clickable="true" android:focusable="true"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        tools:context=".fragments.DetailFragment">
+      
+      <include android:id="@+id/itemRepo" layout="@layout/item_repo"/>
+      
+      <TextView
+          android:id="@+id/watchersTitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/watchers"
+          android:layout_margin="8dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+      
       <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/watcherList"
           android:layout_margin="8dp"
           android:layout_width="match_parent"
           android:layout_height="match_parent"/>
-  </LinearLayout>
+    </LinearLayout>
+  </androidx.core.widget.NestedScrollView>
 </layout>

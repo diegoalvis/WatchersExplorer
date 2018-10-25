@@ -38,7 +38,6 @@ class ListRepoFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = recyclerView.layoutManager?.itemCount
-
                 if (mLoading) {
                     if (totalItemCount != null) {
                         if (totalItemCount > mPreviousTotal) {

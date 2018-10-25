@@ -30,7 +30,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         selected.value = item
     }
 
-
     // fetch watchers
     fun getWatchers(page: Int = 1): Flowable<MutableList<Owner>>? {
         if (page == 1) {
@@ -41,7 +40,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             apiInterface
                 .getWatchers(it.owner.login, it.name, page)
                 .applyUISchedulers()
-                .doOnTerminate { isLoading.set(false) }
+                .doOnComplete { isLoading.set(false) }
         }
     }
 
@@ -51,12 +50,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     // fetch repositories
-    fun searchRepositories(
-        keyWord: String,
-        sort: String? = null,
-        order: String? = null,
-        page: Int = 1
-    ): Flowable<SearchResponse> {
+    fun searchRepositories(keyWord: String, sort: String? = null, order: String? = null, page: Int = 1): Flowable<SearchResponse> {
         lastKeyWordSearched = keyWord
         lastSort = sort
         lastOrder = order
@@ -69,7 +63,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             .searchRepos(keyWord, sort, order, page)
             .throttleFirst(1, TimeUnit.SECONDS)
             .applyUISchedulers()
-            .doOnTerminate { isLoading.set(false) }
+            .doOnComplete { isLoading.set(false) }
     }
 
     fun getMoreRepos(): Flowable<SearchResponse> {

@@ -2,9 +2,9 @@ package com.example.diegoalvis.watchersexplorer
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
@@ -14,10 +14,17 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.diegoalvis.watchersexplorer.databinding.ActivityMainBinding
 import com.example.diegoalvis.watchersexplorer.fragments.DetailFragment
 import com.example.diegoalvis.watchersexplorer.fragments.ListRepoFragment
+import com.example.diegoalvis.watchersexplorer.utils.applyUISchedulers
 import com.example.diegoalvis.watchersexplorer.utils.replace
 import com.example.diegoalvis.watchersexplorer.viewmodels.SharedViewModel
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
+import com.google.android.material.snackbar.Snackbar
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.progressDialog
 import org.jetbrains.anko.startActivity
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,9 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val showCloseView = ObservableBoolean(false)
-
     private val listRepoFragment = ListRepoFragment.newInstance()
-    private val detailFragment = DetailFragment.newInstance()
+    private val subscription = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,21 +48,23 @@ class MainActivity : AppCompatActivity() {
         switchView.setOnCheckedChangeListener { _, isChecked ->
             switchView.text = getString(if (isChecked) R.string.sort_asc else R.string.sort_desc)
         }
-
         info.setOnClickListener { startActivity<InfoActivity>() }
         ic_github.setOnClickListener { startActivity<InfoActivity>() }
         closeDetails.setOnClickListener { showSearchList() }
 
+        searchView.requestFocusFromTouch()
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?) = false
             @SuppressLint("CheckResult")
             override fun onQueryTextSubmit(query: String): Boolean {
                 showSearchList()
                 val sortByStars = if (checkboxSortByStars.isChecked) "stars" else null
-                val order = if (sortByStars !=  null) switchView.text.toString() else null
-                viewModel
-                    .searchRepositories(query, sortByStars, order)
-                    .subscribe({ viewModel.repos.value = it.items }, { it.printStackTrace() })
+                val order = if (sortByStars != null) switchView.text.toString() else null
+                subscription.add(
+                    viewModel
+                        .searchRepositories(query, sortByStars, order)
+                        .subscribe({ viewModel.repos.value = it.items }, { it.printStackTrace() })
+                )
                 return false
             }
         })
@@ -64,11 +72,36 @@ class MainActivity : AppCompatActivity() {
         showSearchList()
     }
 
+    override fun onResume() {
+        super.onResume()
+        val connectionState = Snackbar.make(binding.root, "No Internet connection.", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE") {}
+        subscription.add(
+            Observable.interval(1, 10, TimeUnit.SECONDS)
+                .flatMap { ReactiveNetwork.observeInternetConnectivity() }
+                .applyUISchedulers()
+                .subscribe({ isConnected ->
+                    if (isConnected) {
+                        connectionState.dismiss()
+                    } else if (!connectionState.isShown) {
+                        connectionState.show()
+                        progress.visibility = GONE
+                    }
+                }, {
+                    Toast.makeText(this, "Error when trying to get connection status", Toast.LENGTH_SHORT).show()
+                })
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        subscription.clear()
+    }
+
     private fun repoSelected() {
         showCloseView.set(true)
         switchView.visibility = GONE
         checkboxSortByStars.visibility = GONE
-        supportFragmentManager.replace(R.id.container, detailFragment, DetailFragment.TAG)
+        supportFragmentManager.replace(R.id.container, DetailFragment.newInstance(), DetailFragment.TAG)
     }
 
     private fun showSearchList() {

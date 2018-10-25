@@ -3,11 +3,13 @@ package com.example.diegoalvis.watchersexplorer.utils
 import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import com.bumptech.glide.Glide
+import com.squareup.picasso.NetworkPolicy
+import com.squareup.picasso.Picasso
 
 @BindingAdapter("imgUrl")
 fun setImageUrl(img: ImageView, url: String){
-    Glide.with(img.context)
-            .load(Uri.parse(url))
-            .into(img)
+    Picasso.get()
+        .load(Uri.parse(url))
+        .networkPolicy(NetworkPolicy.NO_CACHE, NetworkPolicy.NO_STORE)
+        .into(img)
 }
