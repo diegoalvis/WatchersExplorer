@@ -1,30 +1,28 @@
 package com.example.diegoalvis.watchersexplorer.viewmodels
 
-import android.app.Application
 import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.diegoalvis.android.newsapp.api.ApiClient
 import com.diegoalvis.android.newsapp.api.SearchResponse
 import com.example.diegoalvis.watchersexplorer.models.Owner
 import com.example.diegoalvis.watchersexplorer.models.Repo
-import com.example.diegoalvis.watchersexplorer.utils.applyUISchedulers
 import io.reactivex.Flowable
 import java.util.concurrent.TimeUnit
 
-class SharedViewModel(application: Application) : AndroidViewModel(application) {
+open class SharedViewModel : ViewModel() {
 
     private var pageRepoCounter = 1
     private var pageWatcherCounter = 1
-    private val apiInterface = ApiClient.getInterface()
     private var lastKeyWordSearched: String = ""
     private var lastSort: String? = null
     private var lastOrder: String? = null
 
+    var selected = MutableLiveData<Repo>()
+    val watchers = MutableLiveData<MutableList<Owner>>()
+    var apiInterface = ApiClient.getInterface()
     var isLoading: ObservableBoolean = ObservableBoolean(false)
     val repos = MutableLiveData<MutableList<Repo>>()
-    val watchers = MutableLiveData<MutableList<Owner>>()
-    val selected = MutableLiveData<Repo>()
 
     fun select(item: Repo) {
         selected.value = item
@@ -39,7 +37,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             isLoading.set(true)
             apiInterface
                 .getWatchers(it.owner.login, it.name, page)
-                .applyUISchedulers()
+                .doOnError { isLoading.set(false) }
                 .doOnComplete { isLoading.set(false) }
         }
     }
@@ -62,7 +60,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         return apiInterface
             .searchRepos(keyWord, sort, order, page)
             .throttleFirst(1, TimeUnit.SECONDS)
-            .applyUISchedulers()
+            .doOnError { isLoading.set(false) }
             .doOnComplete { isLoading.set(false) }
     }
 

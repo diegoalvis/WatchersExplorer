@@ -3,7 +3,6 @@ package com.example.diegoalvis.watchersexplorer.utils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainer
 import androidx.fragment.app.FragmentManager
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -17,9 +16,14 @@ fun ViewGroup.inflate(layout:Int) = LayoutInflater.from(context).inflate(layout,
 fun <T> Flowable<T>.applyUISchedulers()
         = this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 
-// RX
+fun <T> Flowable<T>.applyTestSchedulers()
+        = this.subscribeOn(Schedulers.trampoline()).observeOn(Schedulers.trampoline())
+
 fun <T> Observable<T>.applyUISchedulers()
         = this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+
+fun <T> Observable<T>.applyTestSchedulers()
+        = this.subscribeOn(Schedulers.trampoline()).observeOn(Schedulers.trampoline())
 
 // Fragment
 fun FragmentManager.replace(container: Int, fragment: Fragment, tag: String) {

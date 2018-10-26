@@ -22,7 +22,6 @@ import com.google.android.material.snackbar.Snackbar
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.progressDialog
 import org.jetbrains.anko.startActivity
 import java.util.concurrent.TimeUnit
 
@@ -52,7 +51,8 @@ class MainActivity : AppCompatActivity() {
         ic_github.setOnClickListener { startActivity<InfoActivity>() }
         closeDetails.setOnClickListener { showSearchList() }
 
-        searchView.requestFocusFromTouch()
+
+        searchView.isIconified = false
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String?) = false
             @SuppressLint("CheckResult")
@@ -63,7 +63,13 @@ class MainActivity : AppCompatActivity() {
                 subscription.add(
                     viewModel
                         .searchRepositories(query, sortByStars, order)
-                        .subscribe({ viewModel.repos.value = it.items }, { it.printStackTrace() })
+                        .applyUISchedulers()
+                        .subscribe({
+                            viewModel.repos.value = it.items
+                        }, {
+                            Snackbar.make(binding.root, "Host unreachable", Snackbar.LENGTH_LONG).show()
+                            it.printStackTrace()
+                        })
                 )
                 return false
             }
@@ -74,7 +80,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val connectionState = Snackbar.make(binding.root, "No Internet connection.", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE") {}
+        val connectionState =
+            Snackbar.make(binding.root, "No Internet connection.", Snackbar.LENGTH_INDEFINITE).setAction("CLOSE") {}
         subscription.add(
             Observable.interval(1, 10, TimeUnit.SECONDS)
                 .flatMap { ReactiveNetwork.observeInternetConnectivity() }

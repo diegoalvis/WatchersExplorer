@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diegoalvis.watchersexplorer.R
 import com.example.diegoalvis.watchersexplorer.adapters.RepoAdapter
+import com.example.diegoalvis.watchersexplorer.utils.applyUISchedulers
 import com.example.diegoalvis.watchersexplorer.viewmodels.SharedViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.list_repo_fragment.view.*
 
 
@@ -61,11 +63,17 @@ class ListRepoFragment : Fragment() {
             fun onLoadMore() {
                 viewModel
                     .getMoreRepos()
+                    .applyUISchedulers()
                     .subscribe({
                         val startIndex = adapter.data.size
                         adapter.data.addAll(it.items)
                         adapter.notifyItemRangeInserted(startIndex, adapter.data.size)
-                    }, { it.printStackTrace() })
+                    }, {
+                        it.printStackTrace()
+                        activity?.findViewById<View>(android.R.id.content)?.let {
+                            Snackbar.make(it, "Host unreachable", Snackbar.LENGTH_LONG).show()
+                        }
+                    })
             }
         })
 

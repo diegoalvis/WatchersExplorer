@@ -9,8 +9,8 @@ import retrofit2.http.Query
 interface ApiInterface {
 
     @GET("/search/repositories")
-    fun searchRepos(@Query("q") keyWords: String, @Query("sort") sort: String?, @Query("order") order: String?, @Query("page") page: Int? = null): Flowable<SearchResponse>
+    fun searchRepos(@Query("q") keyWords: String, @Query("sort") sort: String? = null, @Query("order") order: String? = null, @Query("page") page: Int? = 1): Flowable<SearchResponse>
 
     @GET("/repos/{owner}/{repo}/subscribers")
-    fun getWatchers(@Path("owner") owner: String, @Path("repo") repo: String, @Query("page") page: Int? = null): Flowable<MutableList<Owner>>
+    fun getWatchers(@Path("owner") owner: String, @Path("repo") repo: String, @Query("page") page: Int? = 1): Flowable<MutableList<Owner>>
 }

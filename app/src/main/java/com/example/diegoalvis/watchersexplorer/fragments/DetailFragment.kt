@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.diegoalvis.watchersexplorer.R
 import com.example.diegoalvis.watchersexplorer.adapters.WatcherAdapter
 import com.example.diegoalvis.watchersexplorer.databinding.DetailFragmentBinding
+import com.example.diegoalvis.watchersexplorer.utils.applyUISchedulers
 import com.example.diegoalvis.watchersexplorer.viewmodels.SharedViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.detail_fragment.view.*
 import org.jetbrains.anko.browse
 
@@ -77,16 +79,24 @@ class DetailFragment : Fragment() {
             fun onLoadMore() {
                 viewModel
                     .getMoreWatchers()
+                    ?.applyUISchedulers()
                     ?.subscribe({
                         val startIndex = adapter.data.size
                         adapter.data.addAll(it)
                         adapter.notifyItemRangeInserted(startIndex, adapter.data.size)
-                    }, { it.printStackTrace() })
+                    }, {
+                        it.printStackTrace()
+                        activity?.findViewById<View>(android.R.id.content)?.let {
+                            Snackbar.make(it, "Host unreachable", Snackbar.LENGTH_LONG).show()
+                        }
+                    })
             }
         })
 
         // fetch data
-        viewModel.getWatchers()?.subscribe({ adapter.data = it }, { it.printStackTrace() })
+        viewModel.getWatchers()
+            ?.applyUISchedulers()
+            ?.subscribe({ adapter.data = it }, { it.printStackTrace() })
 
         return view
     }
