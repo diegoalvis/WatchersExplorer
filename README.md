@@ -4,8 +4,6 @@ Android application to find repositories from GitHub and its subscribers
 
 min SDK version 21
 
-This app was developed as a part of the selection process for the company [Cuebiq](https://www.cuebiq.com/)
-
 ---
 ## Screens 
 ![alt text](https://github.com/diegoalvis/WatchersExplorer/blob/master/screens/screen1.png) | ![alt text](https://github.com/diegoalvis/WatchersExplorer/blob/master/screens/screen2.png)
@@ -13,10 +11,10 @@ This app was developed as a part of the selection process for the company [Cuebi
 ![alt text](https://github.com/diegoalvis/WatchersExplorer/blob/master/screens/screen3.png) | ![alt text](https://github.com/diegoalvis/WatchersExplorer/blob/master/screens/screen4.png)
 
 
-## Author
+## About author
 Diego Alvis
 - diegoalvispal@gmail.com
-- [LinkedIn Diego Alvis](https://www.linkedin.com/in/diego-alvis-palencia-7823a5130/)
+- [LinkedIn](https://www.linkedin.com/in/diego-alvis-palencia-7823a5130/)
 
 
 ## LICENSE
